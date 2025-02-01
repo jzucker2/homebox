@@ -1,5 +1,7 @@
 # homebox
 
+This is for running a Music Assistant box agnostic of most other things.
+
 Need to create a file at `/etc/environment` containing the followinfg for health checks:
 
 ```
