@@ -1,6 +1,6 @@
 # homebox
 
-This is for running a Music Assistant box agnostic of most other things.
+This is for running a Music Assistant box agnostic of most other things (ahead of deploy).
 
 Need to create a file at `/etc/environment` containing the followinfg for health checks:
 
