@@ -1,0 +1,33 @@
+services:
+
+  music-assistant:
+    container_name: music-assistant
+    labels:
+      - wud.tag.include=${WUD_SEMVAR_INCLUDE_LABEL}
+      - wud.link.template=https://github.com/music-assistant/server/releases/tag/$${major}.$${minor}.$${patch}
+    image: ghcr.io/music-assistant/server:${MUSIC_ASSISTANT_TAG}
+    volumes:
+      - music-assistant-data:/data
+    restart: unless-stopped
+    healthcheck:
+      # FIXME: need to import .env to actual host environment in order for this to be dynamic!
+      test: [ "CMD-SHELL", "curl -f \"http://${DOCKER_LOCALHOST}:${MUSIC_ASSISTANT_EXTERNAL_PORT}/info\" || exit 1" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    extra_hosts:
+      - "${DOCKER_LOCALHOST}:host-gateway"
+    privileged: true
+    network_mode: host
+    environment:
+      # Provide logging level as environment variable.
+      # default=info, possible=(critical, error, warning, info, debug, verbose)
+      - LOG_LEVEL=${MUSIC_ASSISTANT_LOG_LEVEL}
+
+volumes:
+  music-assistant-data:
+    driver: local
